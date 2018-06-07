@@ -2,32 +2,25 @@ import paper from "paper";
 import * as R from "ramda";
 import { Node } from "./node";
 
+interface Line extends Array<Node> {}
+
+const mapIndexed = R.addIndex(R.map);
+
 const connect = (node1, node2) => {
   node1.siblings = R.append(node2, node1.siblings);
   node2.siblings = R.append(node1, node2.siblings);
 };
 
-const nodes_l1 = R.range(0, 5)
-  .map((node, idx, arr) => {
-    return new Node(`t-l1-${idx}`, 20, 20 * idx);
-  })
-  .map((node, idx, arr) => {
-    const sibling: Node = arr[idx - 1];
-    if (sibling) {
-      connect(
-        node,
-        sibling
-      );
-    }
-    return node;
-  });
+const nums = [R.range(0, 5), R.range(0, 8), R.range(0, 4), R.range(0, 10)];
 
-const nodes_l2 = R.range(0, 10)
-  .map((node, idx, arr) => {
-    return new Node(`t-l2-${idx}`, 40, 20 * idx);
-  })
-  .map((node, idx, arr) => {
-    const sibling: Node = arr[idx - 1];
+const net: Line[] = mapIndexed((line, lIdx) => {
+  const nodes: Node[] = mapIndexed(
+    (n, idx) => new Node(`t-l1-${idx}`, 50 + 50 * lIdx, 50 + 20 * idx),
+    line as Line
+  ) as Node[];
+
+  const withSiblings = mapIndexed((node, idx, arr) => {
+    const sibling: Node = arr[idx - 1] as Node;
     if (sibling) {
       connect(
         node,
@@ -35,30 +28,42 @@ const nodes_l2 = R.range(0, 10)
       );
     }
     return node;
-  });
+  }, nodes);
+
+  return withSiblings;
+}, nums) as Line[];
 
 connect(
-  nodes_l1[2],
-  nodes_l2[1]
+  net[0][3],
+  net[1][2]
 );
 
-const net = [nodes_l1, nodes_l2];
+connect(
+  net[1][0],
+  net[2][2]
+);
 
-console.log(nodes_l1);
-console.log(nodes_l2);
+connect(
+  net[2][3],
+  net[3][3]
+);
 
 window.onload = function() {
   const canvas = document.getElementById("myCanvas") as HTMLCanvasElement;
   paper.setup(canvas);
 
   R.forEach(line => {
-    const path = new paper.Path();
-    path.strokeColor = "black";
-    const start = new paper.Point(0, 0);
-    path.moveTo(start);
-
     R.forEach(node => {
-      path.lineTo(start.add([node.x, node.y]));
+      const circle = new paper.Path.Circle(new paper.Point(node.x, node.y), 3);
+      circle.strokeColor = "black";
+      // path.lineTo(start.add([node.x, node.y]));
+      R.forEach(sibling => {
+        const path = new paper.Path();
+        path.strokeColor = "black";
+        const start = new paper.Point(node.x, node.y);
+        path.moveTo(start);
+        path.lineTo(new paper.Point(sibling.x, sibling.y));
+      }, node.siblings);
     }, line);
   }, net);
 
