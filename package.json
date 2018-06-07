@@ -1,0 +1,22 @@
+{
+  "name": "trains",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/paper": "^0.9.15",
+    "@types/ramda": "^0.25.32",
+    "parcel-bundler": "^1.8.1",
+    "typescript": "^2.9.1"
+  },
+  "dependencies": {
+    "paper": "^0.11.5",
+    "ramda": "^0.25.0"
+  }
+}
