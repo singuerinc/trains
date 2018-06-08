@@ -1,7 +1,8 @@
 import * as R from 'ramda';
 import { Node } from './node';
 
-interface Line extends Array<Node> {}
+export interface Net extends Array<Line> {}
+export interface Line extends Array<Node> {}
 
 const mapIndexed = R.addIndex(R.map);
 
@@ -10,7 +11,7 @@ const connect = (node1, node2) => {
   node2.siblings = R.append(node1, node2.siblings);
 };
 
-const net: Line[] = mapIndexed(
+const net: Net = mapIndexed(
   (line, lIdx) => {
     const nodes: Node[] = mapIndexed(
       (n, idx) => new Node(`t-l${lIdx}-${idx}`, 50 + 50 * lIdx, 50 + 20 * idx),
