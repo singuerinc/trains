@@ -1,7 +1,13 @@
-import { forEach, append, reduce, minBy } from 'ramda';
+import { forEach, append, reduce, memoize, minBy } from 'ramda';
 import { Node } from './node';
 
-const shortest = reduce(minBy(x => x.length));
+export const interpolate = (o, d, frac: number) => {
+  const nx = o.x + (d.x - o.x) * frac;
+  const ny = o.y + (d.y - o.y) * frac;
+  return [nx, ny];
+};
+
+const shortest = memoize(reduce(minBy(x => x.length)));
 
 //                 x-----x--->
 //                /

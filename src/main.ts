@@ -3,6 +3,7 @@ import { forEach, append, addIndex, indexOf, map } from 'ramda';
 import { net } from './net';
 import { Node } from './node';
 import { explorer } from './route';
+import { Train } from './train';
 
 const mapIndexed = addIndex(map);
 const connection = (n1, n2) => `${n1.id}+${n2.id}`;
@@ -60,9 +61,24 @@ const drawRoute = mapIndexed((node: Node, idx, arr) => {
   }
 });
 
+const drawTrains = (trains): paper.Path.Circle[] => {
+  let arr = [];
+  forEach((train: Train) => {
+    const circle = new paper.Path.Circle(new paper.Point(train.x, train.y), 8);
+    circle.opacity = 0.7;
+    circle.fillColor = 'red';
+    circle.strokeWidth = 3;
+    circle.strokeColor = 'black';
+    arr = append(circle, arr);
+  }, trains);
+  return arr;
+};
+
 const route = explorer(net[0][0], net[3][4]);
 
-console.log(log(route));
+const train = new Train('Yolanda', route);
+
+// console.log(log(route));
 
 window.onload = function() {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -73,6 +89,11 @@ window.onload = function() {
   }, net);
 
   drawRoute(route);
+  const myTrains = drawTrains([train]);
 
-  paper.view.draw();
+  setInterval(() => {
+    myTrains[0].position.x = train.x;
+    myTrains[0].position.y = train.y;
+    paper.view.draw();
+  }, 200);
 };
