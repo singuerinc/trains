@@ -1,7 +1,7 @@
 import paper from 'paper';
 import * as R from 'ramda';
 import { net } from './net';
-import { finder } from './route';
+import { explorer } from './route';
 
 const connection = (n1, n2) => `${n1.id}+${n2.id}`;
 const connectionExist = (n1, n2, list) => {
@@ -55,5 +55,5 @@ window.onload = function() {
   paper.view.draw();
 };
 
-const r = finder(net[0][0], null, net[0][3], {});
-console.log(JSON.parse(JSON.stringify(r)));
+const r = explorer(net[0][0], net[1][4]);
+console.log(r);
