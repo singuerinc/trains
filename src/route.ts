@@ -1,12 +1,14 @@
-import { forEach, append } from 'ramda';
+import { forEach, append, reduce, minBy } from 'ramda';
 import { Node } from './node';
+
+const shortest = reduce(minBy(x => x.length));
 
 //                 x-----x--->
 //                /
 //--O---O---O----x----x---->
 //           \
 //            O-----X---->
-export const explorer = (origin: Node, dest: Node) => {
+export const explorer = (origin: Node, dest: Node): Node[] => {
   let results = [];
   const finder = (
     from: Node,
@@ -36,5 +38,5 @@ export const explorer = (origin: Node, dest: Node) => {
 
   finder(origin, dest);
 
-  return results;
+  return shortest(results[0])(results);
 };

@@ -1,5 +1,5 @@
 import paper from 'paper';
-import { forEach, append, addIndex, reduce, indexOf, map, minBy } from 'ramda';
+import { forEach, append, addIndex, indexOf, map } from 'ramda';
 import { net } from './net';
 import { Node } from './node';
 import { explorer } from './route';
@@ -59,13 +59,12 @@ const drawRoute = mapIndexed((node: Node, idx, arr) => {
   }
 });
 
-const shortest = reduce(minBy(x => x.length), []);
-
 const route = explorer(net[0][0], net[1][4]);
+console.log(route);
 
 const log = map(node => `==-( ${node.id} )-==`);
 
-console.log.apply(null, log(shortest(route)));
+console.log.apply(null, log(route));
 
 window.onload = function() {
   const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
@@ -75,7 +74,7 @@ window.onload = function() {
     drawLine(line, []);
   }, net);
 
-  drawRoute(route[1]);
+  drawRoute(route);
 
   paper.view.draw();
 };
