@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { forEach, append } from 'ramda';
 import { Node } from './node';
 
 //                 x-----x--->
@@ -14,13 +14,13 @@ export const explorer = (origin: Node, dest: Node) => {
     parent: Node = null,
     path: object = {}
   ) => {
-    R.forEach(sibling => {
+    forEach(sibling => {
       // don't walk backwards
       if (sibling === parent) return;
 
       // // found!
       if (sibling === to) {
-        results = R.append(path.path, results);
+        results = append(path.path, results);
         return;
       }
 

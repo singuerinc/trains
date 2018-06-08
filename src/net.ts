@@ -1,10 +1,10 @@
-import * as R from 'ramda';
+import { addIndex, map, range, append } from 'ramda';
 import { Node } from './node';
 
 export interface Net extends Array<Line> {}
 export interface Line extends Array<Node> {}
 
-const mapIndexed = R.addIndex(R.map);
+const mapIndexed = addIndex(map);
 
 const connect = (node1: Node, node2: Node, siblings: Node[][]) => {
   const [s1, s2] = siblings;
@@ -14,13 +14,13 @@ const connect = (node1: Node, node2: Node, siblings: Node[][]) => {
 };
 
 const bothSiblings = (node1: Node, node2: Node): Node[][] => {
-  return [R.append(node2, node1.siblings), R.append(node1, node2.siblings)];
+  return [append(node2, node1.siblings), append(node1, node2.siblings)];
 };
 
 const net: Net = mapIndexed(
   (line, lIdx) => {
     const nodes: Node[] = mapIndexed(
-      (n, idx) => new Node(`l${lIdx}-s${idx}`, 50 + 50 * lIdx, 50 + 20 * idx),
+      (n, idx) => new Node(`l${lIdx}-s${idx}`, 50 + 150 * lIdx, 50 + 150 * idx),
       line as Line
     ) as Node[];
 
@@ -38,7 +38,7 @@ const net: Net = mapIndexed(
 
     return withSiblings;
   },
-  [R.range(0, 5), R.range(0, 8), R.range(0, 4), R.range(0, 10)]
+  [range(0, 5), range(0, 8), range(0, 4), range(0, 10)]
 ) as Line[];
 
 const l0_s3 = net[0][3];

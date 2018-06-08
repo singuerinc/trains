@@ -1,5 +1,3 @@
-import * as R from 'ramda';
-
 export class Node {
   siblings: Array<Node> = [];
 

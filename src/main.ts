@@ -1,20 +1,21 @@
 import paper from 'paper';
-import * as R from 'ramda';
+import { forEach, append, addIndex, reduce, indexOf, map, minBy } from 'ramda';
 import { net } from './net';
+import { Node } from './node';
 import { explorer } from './route';
 
-const mapIndexed = R.addIndex(R.map);
+const mapIndexed = addIndex(map);
 const connection = (n1, n2) => `${n1.id}+${n2.id}`;
 const connectionExist = (n1, n2, list) => {
   return (
-    R.indexOf(connection(n1, n2), list) !== -1 ||
-    R.indexOf(connection(n2, n1), list) !== -1
+    indexOf(connection(n1, n2), list) !== -1 ||
+    indexOf(connection(n2, n1), list) !== -1
   );
 };
 
 const drawLine = (line, connections): string[] => {
   let c: string[] = [];
-  R.forEach(node => {
+  forEach(node => {
     c = drawNode(node, connections);
   }, line);
   return c;
@@ -24,10 +25,10 @@ const drawNode = (node, connections): string[] => {
   let c: string[] = [];
   const circle = new paper.Path.Circle(new paper.Point(node.x, node.y), 3);
   circle.strokeColor = 'black';
-  R.forEach(sibling => {
+  forEach(sibling => {
     if (!connectionExist(node, sibling, connections)) {
       drawSiblings(node, sibling);
-      c = R.append(connection(node, sibling), connections);
+      c = append(connection(node, sibling), connections);
     }
   }, node.siblings);
   return c;
@@ -45,7 +46,7 @@ const drawSiblings = (node, sibling) => {
   path.lineTo(new paper.Point(sibling.x, sibling.y));
 };
 
-const drawRoute = mapIndexed((node, idx, arr) => {
+const drawRoute = mapIndexed((node: Node, idx, arr) => {
   const sibling = arr[idx + 1];
   if (sibling) {
     const path = new paper.Path();
@@ -58,17 +59,23 @@ const drawRoute = mapIndexed((node, idx, arr) => {
   }
 });
 
+const shortest = reduce(minBy(x => x.length), []);
+
 const route = explorer(net[0][0], net[1][4]);
+
+const log = map(node => `==-( ${node.id} )-==`);
+
+console.log.apply(null, log(shortest(route)));
 
 window.onload = function() {
   const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
   paper.setup(canvas);
 
-  R.forEach(line => {
+  forEach(line => {
     drawLine(line, []);
   }, net);
 
-  drawRoute(route[0]);
+  drawRoute(route[1]);
 
   paper.view.draw();
 };
