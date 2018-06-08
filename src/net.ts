@@ -43,10 +43,11 @@ const net: Net = mapIndexed(
 
 const l0_s3 = net[0][3];
 const l1_s2 = net[1][2];
-const l1_s0 = net[1][0];
+const l1_s0 = net[1][1];
 const l2_s2 = net[2][2];
 const l2_s3 = net[2][3];
 const l3_s3 = net[2][3];
+const l4_s3 = net[3][3];
 
 connect(
   l0_s3,
@@ -62,6 +63,11 @@ connect(
   l2_s3,
   l3_s3,
   bothSiblings(l2_s3, l3_s3)
+);
+connect(
+  l3_s3,
+  l4_s3,
+  bothSiblings(l3_s3, l4_s3)
 );
 
 export { net };

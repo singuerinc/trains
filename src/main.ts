@@ -12,6 +12,7 @@ const connectionExist = (n1, n2, list) => {
     indexOf(connection(n2, n1), list) !== -1
   );
 };
+const log = map((node: Node) => `==-( ${node.id} )-==`);
 
 const drawLine = (line, connections): string[] => {
   let c: string[] = [];
@@ -47,7 +48,7 @@ const drawSiblings = (node, sibling) => {
 };
 
 const drawRoute = mapIndexed((node: Node, idx, arr) => {
-  const sibling = arr[idx + 1];
+  const sibling = arr[idx + 1] as Node;
   if (sibling) {
     const path = new paper.Path();
     path.strokeColor = 'cyan';
@@ -59,15 +60,12 @@ const drawRoute = mapIndexed((node: Node, idx, arr) => {
   }
 });
 
-const route = explorer(net[0][0], net[1][4]);
-console.log(route);
+const route = explorer(net[0][0], net[3][4]);
 
-const log = map(node => `==-( ${node.id} )-==`);
-
-console.log.apply(null, log(route));
+console.log(log(route));
 
 window.onload = function() {
-  const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
+  const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   paper.setup(canvas);
 
   forEach(line => {
