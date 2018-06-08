@@ -3,6 +3,7 @@ import * as R from 'ramda';
 import { net } from './net';
 import { explorer } from './route';
 
+const mapIndexed = R.addIndex(R.map);
 const connection = (n1, n2) => `${n1.id}+${n2.id}`;
 const connectionExist = (n1, n2, list) => {
   return (
@@ -44,6 +45,20 @@ const drawSiblings = (node, sibling) => {
   path.lineTo(new paper.Point(sibling.x, sibling.y));
 };
 
+const drawRoute = mapIndexed((node, idx, arr) => {
+  const sibling = arr[idx + 1];
+  if (sibling) {
+    const path = new paper.Path();
+    path.strokeColor = 'blue';
+    path.strokeWidth = 10;
+    const start = new paper.Point(node.x, node.y);
+    path.moveTo(start);
+    path.lineTo(new paper.Point(sibling.x, sibling.y));
+  }
+});
+
+const route = explorer(net[0][0], net[1][4]);
+
 window.onload = function() {
   const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
   paper.setup(canvas);
@@ -52,8 +67,7 @@ window.onload = function() {
     drawLine(line, []);
   }, net);
 
+  drawRoute(route[0]);
+
   paper.view.draw();
 };
-
-const r = explorer(net[0][0], net[1][4]);
-console.log(r);
