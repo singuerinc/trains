@@ -49,8 +49,9 @@ const drawRoute = mapIndexed((node, idx, arr) => {
   const sibling = arr[idx + 1];
   if (sibling) {
     const path = new paper.Path();
-    path.strokeColor = 'blue';
+    path.strokeColor = 'cyan';
     path.strokeWidth = 10;
+    path.opacity = 0.5;
     const start = new paper.Point(node.x, node.y);
     path.moveTo(start);
     path.lineTo(new paper.Point(sibling.x, sibling.y));
