@@ -25,21 +25,19 @@ export class Train {
     console.log(this, `Access request to ${node.id}`);
     const answer = await node.ask(this);
     console.log(this, 'Access granted!');
-    // this.x = node.x;
-    // this.y = node.y;
-
     return new Promise<boolean>((resolve, reject) => {
       const move = (x1, y1, x2, y2, f) => {
+        f = Math.min(1, f);
         const [x, y] = interpolate({ x: x1, y: y1 }, { x: x2, y: y2 }, f);
-        console.log(f);
+        console.log(`Moving towards ${node.id} ${100 * f}%`);
         this.x = x;
         this.y = y;
         if (f >= 1) {
           return resolve(true);
         }
         setTimeout(async () => {
-          move(x1, y1, x2, y2, f + 0.2);
-        }, 1000);
+          move(x1, y1, x2, y2, f + 0.05);
+        }, 500);
       };
       move(this.x, this.y, node.x, node.y, 0);
     });

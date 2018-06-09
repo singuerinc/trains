@@ -95,5 +95,5 @@ window.onload = function() {
     myTrains[0].position.x = train.x;
     myTrains[0].position.y = train.y;
     paper.view.draw();
-  }, 200);
+  }, 100);
 };
