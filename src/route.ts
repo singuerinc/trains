@@ -1,4 +1,4 @@
-import { forEach, append, reduce, memoize, minBy } from 'ramda';
+import { forEach, append, prepend, reduce, memoize, minBy } from 'ramda';
 import { Node } from './node';
 
 export const interpolate = (o, d, frac: number) => {
@@ -25,10 +25,11 @@ export const explorer = (origin: Node, dest: Node): Node[] => {
     forEach(sibling => {
       // don't walk backwards
       if (sibling === parent) return;
+      if (path.path && path.path.indexOf(sibling) !== -1) return;
 
       // // found!
       if (sibling === to) {
-        results = append(path.path, results);
+        results = append([origin, ...path.path, dest], results);
         return;
       }
 

@@ -5,7 +5,7 @@ import { Node } from './node';
 import { explorer } from './route';
 import { Train } from './train';
 
-const mapIndexed = addIndex(map);
+const forEachIndexed = addIndex(forEach);
 const connection = (n1, n2) => `${n1.id}+${n2.id}`;
 const connectionExist = (n1, n2, list) => {
   return (
@@ -48,7 +48,7 @@ const drawSiblings = (node, sibling) => {
   path.lineTo(new paper.Point(sibling.x, sibling.y));
 };
 
-const drawRoute = mapIndexed((node: Node, idx, arr) => {
+const drawRoute = forEachIndexed((node: Node, idx, arr) => {
   const sibling = arr[idx + 1] as Node;
   if (sibling) {
     const path = new paper.Path();
@@ -74,7 +74,7 @@ const drawTrains = (trains): paper.Path.Circle[] => {
   return arr;
 };
 
-const route = explorer(net[0][0], net[3][4]);
+const route = explorer(net[0][0], net[3][0]);
 
 const train = new Train('Yolanda', route);
 
