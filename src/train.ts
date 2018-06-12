@@ -1,14 +1,17 @@
-import { head, drop, take } from 'ramda';
-import { Node } from './node';
 import anime = require('animejs');
+import { head, append, concat, forEach, filter, drop } from 'ramda';
+import { Node } from './node';
+import { ICargo } from './cargo';
 
 export class Train {
   public x = 0;
   public y = 0;
+  public cargo: ICargo[];
 
   constructor(public id: string, public route: Node[]) {
     const { x: rx, y: ry } = head(this.route);
 
+    this.cargo = [];
     this.x = rx;
     this.y = ry;
 
@@ -26,19 +29,41 @@ export class Train {
     run(route);
   }
 
-  async go(node: Node, path: Node[]): Promise<void> {
+  async go(node: Node, path: Node[]) {
     console.log(this, `Access request to ${node.id}`);
 
     const answer = await node.ask(this);
 
-    console.log(this, 'Access granted!');
+    console.log(this, answer, 'Access granted!, entering...');
 
-    return anime({
+    await anime({
       targets: this,
       x: node.x,
       y: node.y,
-      easing: 'linear'
+      easing: 'linear',
+      update: () => {
+        forEach(c => {
+          c.x = this.x;
+          c.y = this.y;
+        }, this.cargo);
+      }
     }).finished;
+
+    forEach(x => x.setAt(this), this.cargo);
+
+    const cargo = node.getWaitingCargo(this.route);
+
+    forEach(x => node.remove(x), cargo);
+    forEach(c => {
+      this.add(c);
+      c.setAt(this);
+    }, cargo);
+
+    return new Promise<void>((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
 
     // return new Promise<boolean>((resolve, reject) => {
     //   const move = (x1, y1, x2, y2, c) => {
@@ -60,6 +85,15 @@ export class Train {
     //   };
     //   move(this.x, this.y, node.x, node.y, 0);
     // });
+  }
+
+  add(cargo: ICargo) {
+    this.cargo = append(cargo, this.cargo);
+  }
+
+  remove(cargo: ICargo) {
+    const notCargo = x => x !== cargo;
+    this.cargo = filter(notCargo, this.cargo);
   }
 
   toString() {

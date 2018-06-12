@@ -1,8 +1,9 @@
 import * as PIXI from 'pixi.js';
-import { forEach, append, addIndex, indexOf, sort, map, last } from 'ramda';
+import { forEach, append, addIndex, indexOf } from 'ramda';
 import { Train } from './train';
 import { Node } from './node';
 import { Net } from './net';
+import { ICargo } from './cargo';
 const forEachIndexed = addIndex(forEach);
 
 const connection = (n1, n2) => `${n1.id}+${n2.id}`;
@@ -73,8 +74,24 @@ const drawRoute = layer => (r, i, c) =>
     }
   })(r);
 
-const drawTrains = (trains, layer): PIXI.Graphics[] => {
-  let arr = [];
+const drawCargo = (cargo, layer): PIXI.Graphics[] => {
+  let arr: PIXI.Graphics[] = [];
+  forEach((obj: ICargo) => {
+    const g = new PIXI.Graphics();
+    g.x = obj.x;
+    g.y = obj.y;
+    g.beginFill(0x000000);
+    g.drawCircle(0, 0, 7);
+    g.endFill();
+    layer.addChild(g);
+
+    arr = append(g, arr);
+  }, cargo);
+  return arr;
+};
+
+const drawTrains = (trains, layer) => {
+  let arr: PIXI.Graphics[] = [];
   forEach((train: Train) => {
     const circle = new PIXI.Graphics();
     circle.beginFill(0xff6666);
@@ -113,17 +130,24 @@ const layers = new PIXI.Graphics();
 const netLayer = new PIXI.Graphics();
 const routesLayer = new PIXI.Graphics();
 const trainsLayer = new PIXI.Graphics();
+const cargoLayer = new PIXI.Graphics();
 
 layers.addChild(netLayer);
 layers.addChild(routesLayer);
 layers.addChild(trainsLayer);
+layers.addChild(cargoLayer);
 
 layers.x = 50;
 layers.y = 50;
 
 stage.addChild(layers);
 
-export const draw = (net: Net, routes: Node[][], trains: Train[]) => {
+export const draw = (
+  net: Net,
+  routes: Node[][],
+  trains: Train[],
+  cargo: ICargo[]
+) => {
   const drawLines = forEach(line => {
     const layer = new PIXI.Graphics();
     netLayer.addChild(layer);
@@ -132,11 +156,15 @@ export const draw = (net: Net, routes: Node[][], trains: Train[]) => {
 
   drawLines(net);
   forEachIndexed(drawRoute(routesLayer), routes);
+  const cc = drawCargo(cargo, cargoLayer);
   const tt = drawTrains(trains, trainsLayer);
 
   const loop = () => {
     tt[0].position.x = trains[0].x;
     tt[0].position.y = trains[0].y;
+
+    cc[0].position.x = cargo[0].x;
+    cc[0].position.y = cargo[0].y;
 
     requestAnimationFrame(loop);
     renderer.render(stage);
