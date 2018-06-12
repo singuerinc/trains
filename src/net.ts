@@ -20,7 +20,7 @@ export const bothSiblings = (node1: Node, node2: Node): Node[][] => {
 const net: Net = mapIndexed(
   (line, lIdx) => {
     const nodes: Node[] = mapIndexed(
-      (n, idx) => new Node(`l${lIdx}-s${idx}`, 50 + 150 * lIdx, 50 + 100 * idx),
+      (n, idx) => new Node(`l${lIdx}-s${idx}`, 150 * lIdx, 100 * idx),
       line as Line
     ) as Node[];
 

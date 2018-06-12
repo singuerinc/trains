@@ -11,8 +11,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/animejs": "^2.0.0",
     "@types/jest": "^23.0.0",
-    "@types/paper": "^0.9.15",
+    "@types/pixi.js": "^4.7.5",
     "@types/ramda": "^0.25.32",
     "jest": "^23.1.0",
     "parcel-bundler": "^1.8.1",
@@ -20,7 +21,8 @@
     "typescript": "^2.9.1"
   },
   "dependencies": {
-    "paper": "^0.11.5",
+    "animejs": "^2.2.0",
+    "pixi.js": "^4.8.1",
     "ramda": "^0.25.0"
   },
   "jest": {
