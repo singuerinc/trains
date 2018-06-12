@@ -14,7 +14,7 @@ export const shortest = memoize(reduce(minBy(x => x.length)));
 //--O---O---O----x----x---->
 //           \
 //            O-----X---->
-export const explorer = (origin: Node, dest: Node): Node[] => {
+export const explorer = (origin: Node, dest: Node): any[] => {
   let results = [];
   const finder = (
     from: Node,
