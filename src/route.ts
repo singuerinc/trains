@@ -7,7 +7,7 @@ export const interpolate = (o, d, frac: number) => {
   return [nx, ny];
 };
 
-const shortest = memoize(reduce(minBy(x => x.length)));
+export const shortest = memoize(reduce(minBy(x => x.length)));
 
 //                 x-----x--->
 //                /
@@ -45,5 +45,6 @@ export const explorer = (origin: Node, dest: Node): Node[] => {
 
   finder(origin, dest);
 
-  return shortest(results[0])(results);
+  // return shortest(results[0])(results);
+  return results;
 };

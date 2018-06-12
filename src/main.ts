@@ -1,8 +1,8 @@
 import paper from 'paper';
-import { forEach, append, addIndex, indexOf, map } from 'ramda';
+import { forEach, append, addIndex, indexOf, sort, map, last } from 'ramda';
 import { net } from './net';
 import { Node } from './node';
-import { explorer } from './route';
+import { explorer, shortest } from './route';
 import { Train } from './train';
 
 const forEachIndexed = addIndex(forEach);
@@ -27,6 +27,11 @@ const drawNode = (node, connections): string[] => {
   let c: string[] = [];
   const circle = new paper.Path.Circle(new paper.Point(node.x, node.y), 3);
   circle.strokeColor = 'black';
+  const text = new paper.PointText(new paper.Point(node.x + 20, node.y - 20));
+  text.justification = 'center';
+  text.fillColor = 'black';
+  text.content = node.id;
+  text.rotation = -45;
   forEach(sibling => {
     if (!connectionExist(node, sibling, connections)) {
       drawSiblings(node, sibling);
@@ -38,43 +43,44 @@ const drawNode = (node, connections): string[] => {
 
 const drawSiblings = (node, sibling) => {
   const path = new paper.Path();
-  path.strokeColor = new paper.Color(
-    Math.random(),
-    Math.random(),
-    Math.random()
-  );
+  path.strokeColor = 'grey';
   const start = new paper.Point(node.x, node.y);
   path.moveTo(start);
   path.lineTo(new paper.Point(sibling.x, sibling.y));
 };
 
-const drawRoute = forEachIndexed((node: Node, idx, arr) => {
-  const sibling = arr[idx + 1] as Node;
-  if (sibling) {
-    const path = new paper.Path();
-    path.strokeColor = 'cyan';
-    path.strokeWidth = 10;
-    path.opacity = 0.5;
-    const start = new paper.Point(node.x, node.y);
-    path.moveTo(start);
-    path.lineTo(new paper.Point(sibling.x, sibling.y));
-  }
-});
+const drawRoute = (r, i, c) =>
+  forEachIndexed((node: Node, idx, arr) => {
+    const sibling = arr[idx + 1] as Node;
+    if (sibling) {
+      const path = new paper.Path();
+      path.strokeColor = i === c.length - 1 ? 'cyan' : 'red';
+      path.strokeWidth = i === c.length - 1 ? 10 : 5;
+      path.opacity = i === c.length - 1 ? 0.7 : 0.3;
+      const start = new paper.Point(node.x, node.y);
+      path.moveTo(start);
+      path.lineTo(new paper.Point(sibling.x, sibling.y));
+    }
+  })(r);
 
 const drawTrains = (trains): paper.Path.Circle[] => {
   let arr = [];
   forEach((train: Train) => {
     const circle = new paper.Path.Circle(new paper.Point(train.x, train.y), 8);
-    circle.opacity = 0.7;
-    circle.fillColor = 'red';
-    circle.strokeWidth = 3;
+    circle.fillColor = 'grey';
+    circle.strokeWidth = 2;
     circle.strokeColor = 'black';
     arr = append(circle, arr);
   }, trains);
   return arr;
 };
 
-const route = explorer(net[0][0], net[3][0]);
+const routes = sort(
+  (a, b) => a.length < b.length,
+  explorer(net[0][0], net[3][6])
+);
+console.log(routes);
+const route = last(routes);
 
 const train = new Train('Yolanda', route);
 
@@ -88,7 +94,7 @@ window.onload = function() {
     drawLine(line, []);
   }, net);
 
-  drawRoute(route);
+  forEachIndexed(drawRoute, routes);
   const myTrains = drawTrains([train]);
 
   setInterval(() => {

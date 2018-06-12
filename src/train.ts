@@ -3,7 +3,6 @@ import { Node } from './node';
 import { interpolate } from './route';
 
 export class Train {
-
   public x = 0;
   public y = 0;
 
@@ -23,7 +22,7 @@ export class Train {
         await this.go(first, r);
 
         run(r);
-      }, 100);
+      }, 20);
     };
 
     run(route);
@@ -52,7 +51,7 @@ export class Train {
 
         setTimeout(async () => {
           move(x1, y1, x2, y2, f + 0.05);
-        }, 500);
+        }, 200);
       };
       move(this.x, this.y, node.x, node.y, 0);
     });

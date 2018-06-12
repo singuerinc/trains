@@ -1,7 +1,7 @@
 import { addIndex, map, range } from 'ramda';
 const mapIndexed = addIndex(map);
 
-import { explorer } from './route';
+import { explorer, shortest } from './route';
 import { Node } from './node';
 import { connect, bothSiblings, Net, Line } from './net';
 
@@ -46,7 +46,8 @@ describe('explorer', () => {
     const from: Node = net[0][0];
     const to: Node = net[2][3];
 
-    const found = explorer(from, to);
+    const routes: Node[] = explorer(from, to);
+    const found = shortest(routes[0])(routes);
 
     expect(found).toHaveLength(7);
     expect(found[0].id).toBe('l0-s0');

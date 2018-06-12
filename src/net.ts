@@ -20,7 +20,7 @@ export const bothSiblings = (node1: Node, node2: Node): Node[][] => {
 const net: Net = mapIndexed(
   (line, lIdx) => {
     const nodes: Node[] = mapIndexed(
-      (n, idx) => new Node(`l${lIdx}-s${idx}`, 50 + 150 * lIdx, 50 + 150 * idx),
+      (n, idx) => new Node(`l${lIdx}-s${idx}`, 50 + 150 * lIdx, 50 + 100 * idx),
       line as Line
     ) as Node[];
 
@@ -43,13 +43,14 @@ const net: Net = mapIndexed(
 
 const l0_s3 = net[0][3];
 const l1_s2 = net[1][2];
-const l1_s1 = net[1][1];
 const l1_s0 = net[1][0];
+const l1_s1 = net[1][1];
+const l1_s7 = net[1][7];
 const l2_s0 = net[2][0];
 const l2_s2 = net[2][2];
 const l2_s3 = net[2][3];
-const l3_s3 = net[2][3];
-const l4_s3 = net[3][3];
+const l3_s3 = net[3][3];
+const l3_s7 = net[3][7];
 
 connect(
   l0_s3,
@@ -72,9 +73,9 @@ connect(
   bothSiblings(l2_s3, l3_s3)
 );
 connect(
-  l3_s3,
-  l4_s3,
-  bothSiblings(l3_s3, l4_s3)
+  l1_s7,
+  l3_s7,
+  bothSiblings(l1_s7, l3_s7)
 );
 
 export { net };
