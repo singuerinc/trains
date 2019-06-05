@@ -21,7 +21,7 @@
     "typescript": "^2.9.1"
   },
   "dependencies": {
-    "animejs": "^2.2.0",
+    "animejs": "^3.0.1",
     "pixi.js": "^4.8.1",
     "ramda": "^0.25.0"
   },
